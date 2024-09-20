@@ -18,7 +18,7 @@ public record NewUserDTO(@NotEmpty(message = "L'username è obbligatorio!")
                          @NotEmpty(message = "La password è obbligatoria!")
                          @Size(min = 4,message = "La password deve avere almeno 4 caratteri!")
                          String password,
-                         @NotNull(message = "Il ruolo dell'utente è obbligatorio!")
-                         //@Pattern(regexp ="^(NORMALE|ORGANIZZATORE)$",message =  "Valore non valido, i valori ammessi sono 'NORMALE' o 'ORGANIZZATORE'")
-                         Role role) {
+                         @NotEmpty(message = "Il ruolo dell'utente è obbligatorio!")
+                         @Pattern(regexp ="^(NORMALE|ORGANIZZATORE)$",message =  "Valore non valido, i valori ammessi sono 'NORMALE' o 'ORGANIZZATORE'")
+                         String role) {
 }

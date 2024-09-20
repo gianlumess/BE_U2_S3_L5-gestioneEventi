@@ -28,7 +28,7 @@ public class UserService {
             throw new BadRequestException("L'email: "+body.email()+" è già in uso!");
         });
 
-        User newUser=new User(body.username(), body.name(), body.surname(), body.email(), body.password(),body.role());
+        User newUser=new User(body.username(), body.name(), body.surname(), body.email(), body.password(),Role.valueOf(body.role()));
 
         return this.userRepository.save(newUser);
     }
