@@ -1,5 +1,6 @@
 package gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @ToString
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"password","role"})
 public class User {
     @Id
     @GeneratedValue
