@@ -3,14 +3,16 @@ package gianlucamessina.BE_U2_S3_L5_gestioneEventi.controllers;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Event;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.UnauthorizedException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.EventResponseDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewEventDTO;
-import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewUserDTO;
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.UpdateEventDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +44,7 @@ public class EventController {
     //POST (http://localhost:3001/events)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
     public EventResponseDTO save(@RequestBody @Validated NewEventDTO body, BindingResult validation){
         if(validation.hasErrors()){
             String message=validation.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(". "));
@@ -49,5 +52,18 @@ public class EventController {
         }
 
         return this.eventService.save(body);
+    }
+
+    //ENDPOINT PER MODIFICARE ED ELIMINARE I PROPRI EVENTI
+
+    @PutMapping("/mine/{eventId}")
+    public EventResponseDTO updateMyEvent(@AuthenticationPrincipal User user,@PathVariable UUID eventId,@RequestBody @Validated UpdateEventDTO payload){
+        Event foundEvent=this.eventService.findById(eventId);
+
+        if(!foundEvent.getUser().getId().equals(user.getId())){
+            throw new UnauthorizedException("Non sei autorizzato a modificare il post in quanto non è tuo!");
+        }
+
+        return this.eventService.findByIdAndUpdate(eventId,payload);
     }
 }

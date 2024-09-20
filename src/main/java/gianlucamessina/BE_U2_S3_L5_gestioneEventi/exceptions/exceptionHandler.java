@@ -33,7 +33,7 @@ public class exceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorsResponseDTO handleBadRequest(UnauthorizedException e){
+    public ErrorsResponseDTO handleUnauthorized(UnauthorizedException e){
         return new ErrorsResponseDTO(e.getMessage(), LocalDateTime.now());
     }
 }

@@ -1,6 +1,5 @@
 package gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads;
 
-import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 

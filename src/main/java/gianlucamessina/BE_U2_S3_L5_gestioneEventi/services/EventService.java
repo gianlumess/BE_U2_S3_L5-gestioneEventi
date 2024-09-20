@@ -6,6 +6,7 @@ import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.NotFoundException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.EventResponseDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewEventDTO;
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.UpdateEventDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,6 +54,21 @@ public class EventService {
         this.eventRepository.save(newEvent);
 
         EventResponseDTO resp=new EventResponseDTO(newEvent.getId(),body.title(), body.description(), body.date(), body.place(), body.seats(), body.userId());
+        return resp;
+    }
+
+    //FIND BY ID AND PUDATE
+    public EventResponseDTO findByIdAndUpdate(UUID eventId, UpdateEventDTO body){
+        Event found=this.findById(eventId);
+
+        found.setDate(body.date());
+        found.setPlace(body.place());
+        found.setTitle(body.title());
+        found.setDescription(body.description());
+        found.setSeats(body.seats());
+
+        EventResponseDTO resp=new EventResponseDTO(found.getId(), body.title(), body.description(), body.date(), body.place(), body.seats(),found.getUser().getId().toString());
+        this.eventRepository.save(found);
         return resp;
     }
 }

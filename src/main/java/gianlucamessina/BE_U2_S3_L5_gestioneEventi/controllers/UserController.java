@@ -28,6 +28,7 @@ public class UserController {
     //POST (http://localhost:3001/users)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+
     public User save(@RequestBody @Validated NewUserDTO body, BindingResult validation){
         if(validation.hasErrors()){
             String message=validation.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(". "));
