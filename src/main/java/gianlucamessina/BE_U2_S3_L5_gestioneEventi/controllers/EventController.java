@@ -64,6 +64,17 @@ public class EventController {
             throw new UnauthorizedException("Non sei autorizzato a modificare il post in quanto non è tuo!");
         }
 
-        return this.eventService.findByIdAndUpdate(eventId,payload);
+        return this.eventService.findByIdAndUpdateForUsers(eventId,payload);
+    }
+
+    @DeleteMapping("/mine/{eventId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMyEvent(@AuthenticationPrincipal User user,@PathVariable UUID eventId){
+        Event foundEvent=this.eventService.findById(eventId);
+
+        if(!foundEvent.getUser().getId().equals(user.getId())){
+            throw new UnauthorizedException("Non sei autorizzato a modificare il post in quanto non è tuo!");
+        }
+        this.eventService.findByIdAndDeleteForUsers(eventId);
     }
 }

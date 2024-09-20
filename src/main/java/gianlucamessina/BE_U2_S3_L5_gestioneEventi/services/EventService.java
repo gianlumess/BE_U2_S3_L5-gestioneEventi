@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,7 +59,7 @@ public class EventService {
     }
 
     //FIND BY ID AND PUDATE
-    public EventResponseDTO findByIdAndUpdate(UUID eventId, UpdateEventDTO body){
+    public EventResponseDTO findByIdAndUpdateForUsers(UUID eventId, UpdateEventDTO body){
         Event found=this.findById(eventId);
 
         found.setDate(body.date());
@@ -70,5 +71,12 @@ public class EventService {
         EventResponseDTO resp=new EventResponseDTO(found.getId(), body.title(), body.description(), body.date(), body.place(), body.seats(),found.getUser().getId().toString());
         this.eventRepository.save(found);
         return resp;
+    }
+
+    //FIND BY ID AND DELETE
+    public void findByIdAndDeleteForUsers(UUID eventId){
+        Event found=this.findById(eventId);
+
+        this.eventRepository.delete(found);
     }
 }
