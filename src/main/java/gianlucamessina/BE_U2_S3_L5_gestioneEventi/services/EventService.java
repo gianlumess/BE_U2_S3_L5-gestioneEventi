@@ -4,6 +4,7 @@ import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Event;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.NotFoundException;
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.EventResponseDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewEventDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class EventService {
     }
 
     //SAVE EVENT
-    public Event save(NewEventDTO body){
+    public EventResponseDTO save(NewEventDTO body){
         //Controlla che la data inserita non sia già passata
         if(body.date().isBefore(LocalDate.now())){
             throw  new BadRequestException("Non è possibile creare un viaggio per una data già passata!");
@@ -49,7 +50,9 @@ public class EventService {
 
 
         Event newEvent=new Event(body.title(), body.description(), body.date(), body.place(), body.seats(), foundUser);
+        this.eventRepository.save(newEvent);
 
-        return this.eventRepository.save(newEvent);
+        EventResponseDTO resp=new EventResponseDTO(newEvent.getId(),body.title(), body.description(), body.date(), body.place(), body.seats(), body.userId());
+        return resp;
     }
 }

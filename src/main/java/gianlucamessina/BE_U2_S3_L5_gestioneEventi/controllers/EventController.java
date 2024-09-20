@@ -3,6 +3,7 @@ package gianlucamessina.BE_U2_S3_L5_gestioneEventi.controllers;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Event;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.EventResponseDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewEventDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewUserDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.services.EventService;
@@ -41,7 +42,7 @@ public class EventController {
     //POST (http://localhost:3001/events)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Event save(@RequestBody @Validated NewEventDTO body, BindingResult validation){
+    public EventResponseDTO save(@RequestBody @Validated NewEventDTO body, BindingResult validation){
         if(validation.hasErrors()){
             String message=validation.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(". "));
             throw new BadRequestException("ci sono stati errori nel payload: "+ message);
