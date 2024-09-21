@@ -3,7 +3,6 @@ package gianlucamessina.BE_U2_S3_L5_gestioneEventi.controllers;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Event;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
-import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.UnauthorizedException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.EventResponseDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewEventDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.UpdateEventDTO;

@@ -1,9 +1,6 @@
 package gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -12,6 +9,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @ToString
+@Entity
 public class Booking {
     @Id
     @GeneratedValue
