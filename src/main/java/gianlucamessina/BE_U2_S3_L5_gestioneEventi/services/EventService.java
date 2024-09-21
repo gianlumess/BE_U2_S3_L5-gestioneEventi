@@ -43,19 +43,16 @@ public class EventService {
     }
 
     //SAVE EVENT
-    public EventResponseDTO save(NewEventDTO body){
+    public EventResponseDTO save(@AuthenticationPrincipal User user, NewEventDTO body){
         //Controlla che la data inserita non sia già passata
         if(body.date().isBefore(LocalDate.now())){
             throw  new BadRequestException("Non è possibile creare un viaggio per una data già passata!");
         }
 
-        User foundUser=this.userService.findById(UUID.fromString(body.userId()));
-
-
-        Event newEvent=new Event(body.title(), body.description(), body.date(), body.place(), body.seats(), foundUser);
+        Event newEvent=new Event(body.title(), body.description(), body.date(), body.place(), body.seats(),user);
         this.eventRepository.save(newEvent);
 
-        EventResponseDTO resp=new EventResponseDTO(newEvent.getId(),body.title(), body.description(), body.date(), body.place(), body.seats(), body.userId());
+        EventResponseDTO resp=new EventResponseDTO(newEvent.getId(),body.title(), body.description(), body.date(), body.place(), body.seats(), user.getId().toString());
         return resp;
     }
 

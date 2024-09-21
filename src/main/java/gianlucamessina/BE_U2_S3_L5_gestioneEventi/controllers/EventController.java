@@ -44,13 +44,13 @@ public class EventController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ORGANIZZATORE')")
-    public EventResponseDTO save(@RequestBody @Validated NewEventDTO body, BindingResult validation){
+    public EventResponseDTO save(@AuthenticationPrincipal User user,@RequestBody @Validated NewEventDTO body, BindingResult validation){
         if(validation.hasErrors()){
             String message=validation.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(". "));
             throw new BadRequestException("ci sono stati errori nel payload: "+ message);
         }
 
-        return this.eventService.save(body);
+        return this.eventService.save(user,body);
     }
 
     //ENDPOINT PER MODIFICARE ED ELIMINARE I PROPRI EVENTI

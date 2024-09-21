@@ -14,7 +14,5 @@ public record NewEventDTO(@NotEmpty(message = "Il titolo dell'evento è obbligat
                           @NotEmpty(message = "La location dell'evento è obbligatoria!")
                           String place,
                           @NotNull(message = "I posti disponibili dell'evento sono obbligatori!")
-                          Integer seats,
-                          @NotEmpty(message = "Devi inserire l'organizzatore!")
-                          String userId) {
+                          Integer seats) {
 }
