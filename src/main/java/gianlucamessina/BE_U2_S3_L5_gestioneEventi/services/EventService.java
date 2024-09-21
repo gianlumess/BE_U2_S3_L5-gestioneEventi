@@ -4,6 +4,7 @@ import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Event;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.NotFoundException;
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.UnauthorizedException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.EventResponseDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewEventDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.UpdateEventDTO;
@@ -59,8 +60,17 @@ public class EventService {
     }
 
     //FIND BY ID AND PUDATE
-    public EventResponseDTO findByIdAndUpdateForUsers(UUID eventId, UpdateEventDTO body){
+    public EventResponseDTO findByIdAndUpdateForUsers(@AuthenticationPrincipal User user,UUID eventId, UpdateEventDTO body){
         Event found=this.findById(eventId);
+
+        if(!found.getUser().getId().equals(user.getId())){
+            throw new UnauthorizedException("Non sei autorizzato a modificare il post in quanto non è tuo!");
+        }
+
+        //Controlla che la data inserita non sia già passata
+        if(body.date().isBefore(LocalDate.now())){
+            throw  new BadRequestException("Non è possibile creare un viaggio per una data già passata!");
+        }
 
         found.setDate(body.date());
         found.setPlace(body.place());
@@ -74,8 +84,12 @@ public class EventService {
     }
 
     //FIND BY ID AND DELETE
-    public void findByIdAndDeleteForUsers(UUID eventId){
+    public void findByIdAndDeleteForUsers(@AuthenticationPrincipal User user,UUID eventId){
         Event found=this.findById(eventId);
+
+        if(!found.getUser().getId().equals(user.getId())){
+            throw new UnauthorizedException("Non sei autorizzato ad eliminare il post in quanto non è tuo!");
+        }
 
         this.eventRepository.delete(found);
     }

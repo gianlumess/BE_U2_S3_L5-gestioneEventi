@@ -57,24 +57,18 @@ public class EventController {
     //ENDPOINT PER MODIFICARE ED ELIMINARE I PROPRI EVENTI
 
     @PutMapping("/mine/{eventId}")
-    public EventResponseDTO updateMyEvent(@AuthenticationPrincipal User user,@PathVariable UUID eventId,@RequestBody @Validated UpdateEventDTO payload){
-        Event foundEvent=this.eventService.findById(eventId);
-
-        if(!foundEvent.getUser().getId().equals(user.getId())){
-            throw new UnauthorizedException("Non sei autorizzato a modificare il post in quanto non è tuo!");
+    public EventResponseDTO updateMyEvent(@AuthenticationPrincipal User user,@PathVariable UUID eventId,@RequestBody @Validated UpdateEventDTO payload,BindingResult validation){
+        if(validation.hasErrors()){
+            String message=validation.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(". "));
+            throw new BadRequestException("ci sono stati errori nel payload: "+ message);
         }
-
-        return this.eventService.findByIdAndUpdateForUsers(eventId,payload);
+        return this.eventService.findByIdAndUpdateForUsers(user,eventId,payload);
     }
 
     @DeleteMapping("/mine/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMyEvent(@AuthenticationPrincipal User user,@PathVariable UUID eventId){
-        Event foundEvent=this.eventService.findById(eventId);
 
-        if(!foundEvent.getUser().getId().equals(user.getId())){
-            throw new UnauthorizedException("Non sei autorizzato a modificare il post in quanto non è tuo!");
-        }
-        this.eventService.findByIdAndDeleteForUsers(eventId);
+        this.eventService.findByIdAndDeleteForUsers(user,eventId);
     }
 }
