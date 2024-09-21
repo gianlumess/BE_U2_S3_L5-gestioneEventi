@@ -43,7 +43,7 @@ public class EventController {
     //POST (http://localhost:3001/events)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ORGANIZZATORE')")
+    @PreAuthorize("hasAuthority('ORGANIZZATORE','ADMIN')")
     public EventResponseDTO save(@AuthenticationPrincipal User user,@RequestBody @Validated NewEventDTO body, BindingResult validation){
         if(validation.hasErrors()){
             String message=validation.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.joining(". "));

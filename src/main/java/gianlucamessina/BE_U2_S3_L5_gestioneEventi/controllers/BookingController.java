@@ -7,6 +7,7 @@ import gianlucamessina.BE_U2_S3_L5_gestioneEventi.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class BookingController {
 
     //GET LISTA BOOKINGS (http://localhost:3001/bookings)
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Booking>findAll(@RequestParam(defaultValue = "0")int page,
                                 @RequestParam(defaultValue = "15")int size,
                                 @RequestParam(defaultValue = "id")String sortBy){

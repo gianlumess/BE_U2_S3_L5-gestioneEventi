@@ -1,11 +1,14 @@
 package gianlucamessina.BE_U2_S3_L5_gestioneEventi.controllers;
 
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Booking;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewUserDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,16 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    //GET FIND ALL (http://localhost:3001/users)
+    @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<User> findAll(@RequestParam(defaultValue = "0")int page,
+                                 @RequestParam(defaultValue = "15")int size,
+                                 @RequestParam(defaultValue = "id")String sortBy){
+
+        return this.userService.findAll(page,size,sortBy);
+    }
 
     //GET FIND BY ID (http://localhost:3001/users/{usersId})
     @GetMapping("/{userId}")

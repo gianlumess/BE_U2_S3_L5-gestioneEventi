@@ -1,5 +1,6 @@
 package gianlucamessina.BE_U2_S3_L5_gestioneEventi.services;
 
+import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.Booking;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.entities.User;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.enums.Role;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.BadRequestException;
@@ -7,6 +8,10 @@ import gianlucamessina.BE_U2_S3_L5_gestioneEventi.exceptions.NotFoundException;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.payloads.NewUserDTO;
 import gianlucamessina.BE_U2_S3_L5_gestioneEventi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,14 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder bCrypt;
+
+    //FIND ALL
+    public Page<User> findAll(int page, int size, String sortBy){
+        if(page>150)page=150;
+
+        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy));
+        return this.userRepository.findAll(pageable);
+    }
 
     //FIND BY ID
     public User findById(UUID userId){
